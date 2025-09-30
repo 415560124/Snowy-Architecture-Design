@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  mysql8:
+    image: mysql:8.0
+    container_name: mysql8-container
+    restart: always
+    
+    # 内存限制配置
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    
+    # 端口映射：将容器的 3306 端口映射到主机的 53306 端口
+    ports:
+      - "53306:3306"
+    
+    # 环境变量配置
+    environment:
+      # 设置 root 用户密码
+      MYSQL_ROOT_PASSWORD: Abc131419..
+      # 设置时区
+      TZ: Asia/Shanghai
+    
+    # 数据卷挂载
+    volumes:
+      # 挂载数据目录到主机 /data/mysql/data
+      - E:\docker\mysql\data:/var/lib/mysql
+      # 挂载配置文件目录到主机 /data/mysql/conf
+      - E:\docker\mysql\conf:/etc/mysql/conf.d
+    
+    # MySQL 启动命令参数配置
+    command: [
+      "mysqld",
+      # 设置默认字符集为 utf8mb4
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      # 设置时区
+      "--default-time-zone=+8:00",
+      # 启用二进制日志
+      "--log-bin=mysql-bin",
+      # 设置服务器 ID
+      "--server-id=1",
+      # 设置最大连接数
+      "--max-connections=1000",
+      # 设置 InnoDB 缓冲池大小（调整为适应 512MB 内存限制）
+      "--innodb-buffer-pool-size=128M",
+      # 启用慢查询日志
+      "--slow-query-log=1",
+      "--slow-query-log-file=/var/lib/mysql/slow.log",
+      "--long-query-time=2",
+      # 设置 SQL 模式
+      "--sql-mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO",
+      # 禁用 DNS 解析以提高性能
+      "--skip-name-resolve",
+      # 设置表名大小写不敏感（适用于跨平台）
+      "--lower-case-table-names=1"
+    ]
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pAbc131419.."]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # 网络配置
+    networks:
+      - mysql-network
+
+# 定义网络
+networks:
+  mysql-network:
+    driver: bridge
+
+# 定义数据卷（可选，使用命名卷）
+volumes:
+  mysql-data:
+    driver: local
+  mysql-conf:
+    driver: local

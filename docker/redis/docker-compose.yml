@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # 初始化容器，用于创建目录和设置权限
+  redis-init:
+    image: alpine:latest
+    container_name: redis-init
+    volumes:
+      - /data/redis/logs:/var/log/redis
+      - /data/redis/data:/data
+      - /data/redis/conf:/usr/local/etc/redis
+    command: |
+      sh -c "
+        mkdir -p /var/log/redis /data /usr/local/etc/redis &&
+        chown -R 999:999 /var/log/redis /data /usr/local/etc/redis &&
+        chmod -R 755 /var/log/redis /data /usr/local/etc/redis
+      "
+    restart: "no"
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis-container
+    restart: always
+    depends_on:
+      - redis-init
+    
+    # 设置用户ID（Redis容器内的redis用户ID是999）
+    user: "999:999"
+    
+    # 内存限制配置
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    
+    # 端口映射：将容器的 6379 端口映射到主机的 56379 端口（与项目配置保持一致）
+    ports:
+      - "56379:6379"
+    
+    # 环境变量配置
+    environment:
+      # 设置时区
+      TZ: Asia/Shanghai
+    
+    # 数据卷挂载
+    volumes:
+      # 挂载Redis配置文件目录到主机 /data/redis/conf
+      - E:\docker\redis\conf:/usr/local/etc/redis
+      # 挂载Redis数据目录到主机 /data/redis/data
+      - E:\docker\redis\data:/data
+      # 挂载Redis日志目录（可选）
+      - E:\docker\redis\logs:/var/log/redis
+    
+    # Redis启动命令配置
+    command: [
+      "redis-server",
+      # 启用AOF持久化
+      "--appendonly", "yes",
+      # 设置AOF文件名
+      "--appendfilename", "appendonly.aof",
+      # 设置AOF同步策略（每秒同步）
+      "--appendfsync", "everysec",
+      # 设置密码（与项目配置保持一致）
+      "--requirepass", "Abc131419..",
+      # 设置最大内存
+      "--maxmemory", "512mb",
+      # 设置内存淘汰策略
+      "--maxmemory-policy", "allkeys-lru",
+      # 禁用保护模式（允许外部连接）
+      "--protected-mode", "no",
+      # 绑定所有网络接口
+      "--bind", "0.0.0.0",
+      # 设置数据库数量
+      "--databases", "16",
+      # 启用RDB持久化
+      "--save", "900", "1",
+      "--save", "300", "10", 
+      "--save", "60", "10000",
+      # 设置RDB文件名
+      "--dbfilename", "dump.rdb",
+      # 设置工作目录
+      "--dir", "/data",
+      # 设置日志级别
+      "--loglevel", "notice",
+      # 设置日志文件
+      "--logfile", "/var/log/redis/redis.log",
+      # 设置TCP keepalive
+      "--tcp-keepalive", "300",
+      # 设置超时时间
+      "--timeout", "0",
+      # 设置TCP backlog
+      "--tcp-backlog", "511"
+    ]
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "Abc131419..", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    # 网络配置
+    networks:
+      - redis-network
+    
+    # 系统限制配置
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+
+# 定义网络
+networks:
+  redis-network:
+    driver: bridge
+
+# 定义数据卷（可选，使用命名卷）
+volumes:
+  redis-data:
+    driver: local
+  redis-conf:
+    driver: local
+  redis-logs:
+    driver: local
