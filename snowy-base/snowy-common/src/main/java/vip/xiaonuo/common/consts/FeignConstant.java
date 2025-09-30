@@ -26,4 +26,7 @@ public final class FeignConstant {
     /** BIZ_APP **/
     public static final String BIZ_APP = "snowy-biz-app";
 
+    /** A_APP **/
+    public static final String A_APP = "snowy-a-app";
+
 }
