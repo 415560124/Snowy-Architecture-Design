@@ -2,6 +2,9 @@ package vip.xiaonuo.a.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
+import vip.xiaonuo.a.api.DemoApi;
+import vip.xiaonuo.a.entity.dto.DemoDTO;
+import vip.xiaonuo.a.param.DemoParam;
 import vip.xiaonuo.common.consts.FeignConstant;
 
 /**
@@ -11,7 +14,7 @@ import vip.xiaonuo.common.consts.FeignConstant;
  * @Date 2025/9/30 17:30
  * @Version 1.0
  */
-@FeignClient(name= FeignConstant.WEB_APP, contextId = "DemoFeign")
+@FeignClient(name= FeignConstant.A_APP, contextId = "DemoFeign")
 public interface DemoFeign {
 
     /**
@@ -19,5 +22,5 @@ public interface DemoFeign {
      * @author RHY
      **/
     @RequestMapping("/feign/demo/query")
-    String query();
+    DemoDTO query(DemoParam demoParam);
 }

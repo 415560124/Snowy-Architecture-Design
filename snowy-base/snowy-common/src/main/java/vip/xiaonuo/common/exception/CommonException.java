@@ -42,8 +42,18 @@ public class CommonException extends RuntimeException {
         this.msg = StrUtil.format(msg, arguments);
     }
 
+    public CommonException(String msg,Throwable throwable, Object... arguments) {
+        super(StrUtil.format(msg, arguments),throwable);
+        this.code = 500;
+        this.msg = StrUtil.format(msg, arguments);
+    }
     public CommonException(Integer code, String msg, Object... arguments) {
         super(StrUtil.format(msg, arguments));
+        this.code = code;
+        this.msg = StrUtil.format(msg, arguments);
+    }
+    public CommonException(Integer code, String msg,Throwable throwable, Object... arguments) {
+        super(StrUtil.format(msg, arguments),throwable);
         this.code = code;
         this.msg = StrUtil.format(msg, arguments);
     }

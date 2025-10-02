@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import vip.xiaonuo.a.api.DemoApi;
+import vip.xiaonuo.a.entity.dto.DemoDTO;
 import vip.xiaonuo.a.feign.DemoFeign;
+import vip.xiaonuo.a.param.DemoParam;
 
 /**
  * @ClassName DemoContextBean
@@ -20,9 +22,8 @@ public class DemoContextBean implements DemoApi {
 
     private final DemoFeign demoFeign;
 
-
     @Override
-    public String query() {
-        return demoFeign.query();
+    public DemoDTO query(DemoParam demoParam) {
+        return demoFeign.query(demoParam);
     }
 }

@@ -11,18 +11,22 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>snowy-web-app</artifactId>
+    <artifactId>snowy-a-app</artifactId>
     <packaging>jar</packaging>
-    <description>主应用启动组件</description>
+    <description>A应用启动组件</description>
 
     <dependencies>
-
 
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- test -->
@@ -48,8 +52,8 @@
         <!--<dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc10</artifactId>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--<dependency>
             <groupId>com.oracle.database.nls</groupId>
             <artifactId>orai18n</artifactId>
         </dependency>-->
@@ -62,106 +66,144 @@
 
         <!-- 达梦数据库 -->
         <!--<dependency>
-            <groupId>com.dameng</groupId>
+            <groupId>DmJdbcDriver18</groupId>
             <artifactId>DmJdbcDriver18</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/main/resources/lib/DmJdbcDriver18.jar</systemPath>
         </dependency>-->
 
         <!-- 人大金仓数据库 -->
         <!--<dependency>
-            <groupId>cn.com.kingbase</groupId>
-            <artifactId>kingbase8</artifactId>
+            <groupId>kingbase8-8.6.0</groupId>
+            <artifactId>kingbase8-8.6.0</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/main/resources/lib/kingbase8-8.6.0.jar</systemPath>
         </dependency>-->
+
+        <!-- sa-token -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+            <version>${sa.token.version}</version>
+        </dependency>
+
+        <!-- sa-token 整合 redis （使用jackson序列化方式） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redis-jackson</artifactId>
+            <version>${sa.token.version}</version>
+        </dependency>
+
+        <!-- Sa-Token插件：权限缓存与业务缓存分离 -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-alone-redis</artifactId>
+            <version>${sa.token.version}</version>
+        </dependency>
+
+        <!-- Sa-Token 插件：整合SSO -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-sso</artifactId>
+            <version>${sa.token.version}</version>
+        </dependency>
 
         <!-- snowy-common -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
             <artifactId>snowy-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- 登录鉴权插件Feign接口 -->
-        <dependency>
-            <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-auth-feign</artifactId>
-        </dependency>
-
-        <!-- 登录鉴权插件Feign接口实现 -->
-        <dependency>
-            <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-auth-feign-provider</artifactId>
         </dependency>
 
         <!-- 登录鉴权插件 -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-auth-func</artifactId>
-            <version>${project.parent.version}</version>
+            <artifactId>snowy-plugin-auth-api</artifactId>
         </dependency>
 
-        <!-- C端功能插件 -->
+        <!-- 业务功能插件 -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-client-func</artifactId>
-            <version>${project.parent.version}</version>
+            <artifactId>snowy-plugin-a-func</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>sms4j-javase-plugin</artifactId>
+                    <groupId>org.dromara.sms4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>sms4j-oa-core</artifactId>
+                    <groupId>org.dromara.sms4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>x-file-storage-spring</artifactId>
+                    <groupId>org.dromara.x-file-storage</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- 开发工具插件 -->
+        <!-- 系统功能插件Feign接口 -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-dev-func</artifactId>
-            <version>${project.parent.version}</version>
+            <artifactId>snowy-plugin-sys-feign</artifactId>
         </dependency>
 
-        <!-- snowy-plugin-dev-feign，向外暴露feign接口 -->
+        <!-- 系统功能插件Api接口context -->
+        <dependency>
+            <groupId>vip.xiaonuo</groupId>
+            <artifactId>snowy-plugin-sys-api-context</artifactId>
+        </dependency>
+
+        <!-- 开发工具插件Feign接口 -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
             <artifactId>snowy-plugin-dev-feign</artifactId>
-            <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>sms4j-javase-plugin</artifactId>
+                    <groupId>org.dromara.sms4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>sms4j-oa-core</artifactId>
+                    <groupId>org.dromara.sms4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>x-file-storage-spring</artifactId>
+                    <groupId>org.dromara.x-file-storage</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- snowy-plugin-dev-feign-provider，向外暴露feign接口实现 -->
+        <!-- 开发工具功能插件Api接口Context -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-dev-feign-provider</artifactId>
+            <artifactId>snowy-plugin-dev-api-context</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>sms4j-javase-plugin</artifactId>
+                    <groupId>org.dromara.sms4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>sms4j-oa-core</artifactId>
+                    <groupId>org.dromara.sms4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>x-file-storage-spring</artifactId>
+                    <groupId>org.dromara.x-file-storage</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- 代码生成插件 -->
-        <dependency>
-            <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-gen-func</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- 移动端管理插件 -->
-        <dependency>
-            <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-mobile-func</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- snowy-plugin-mobile-feign，向外暴露feign接口 -->
+        <!-- 移动端管理功能插件Feign接口 -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
             <artifactId>snowy-plugin-mobile-feign</artifactId>
         </dependency>
 
-        <!-- snowy-plugin-mobile-feign-provider，向外暴露feign接口 -->
+        <!-- 移动端管理功能插件api接口context -->
         <dependency>
             <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-mobile-feign-provider</artifactId>
-        </dependency>
-
-        <!-- 系统功能插件 -->
-        <dependency>
-            <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-sys-func</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- snowy-plugin-sys-feign-provider，向外暴露feign接口实现 -->
-        <dependency>
-            <groupId>vip.xiaonuo</groupId>
-            <artifactId>snowy-plugin-sys-feign-provider</artifactId>
+            <artifactId>snowy-plugin-mobile-api-context</artifactId>
         </dependency>
 
         <!-- bootstrap 配置加载 -->
@@ -235,4 +277,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

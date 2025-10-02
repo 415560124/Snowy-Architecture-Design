@@ -21,6 +21,9 @@
 
         <!-- 业务应用启动组件 -->
         <module>snowy-biz-app</module>
+
+        <!-- A应用启动组件 -->
+        <module>snowy-a-app</module>
     </modules>
 
 </project>

@@ -1,5 +1,8 @@
 package vip.xiaonuo.a.api;
 
+import vip.xiaonuo.a.entity.dto.DemoDTO;
+import vip.xiaonuo.a.param.DemoParam;
+
 /**
  * @ClassName 示例API
  * @Description 用作a模块示例展示
@@ -14,5 +17,5 @@ public interface DemoApi {
      * @author RHY
      * @date 2025/9/30 17:29
      **/
-    String query();
+    DemoDTO query(DemoParam demoParam);
 }

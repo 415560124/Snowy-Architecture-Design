@@ -1,6 +1,9 @@
 package vip.xiaonuo.a.modular.demo.provider;
 
+import com.alibaba.fastjson.JSONObject;
 import vip.xiaonuo.a.api.DemoApi;
+import vip.xiaonuo.a.entity.dto.DemoDTO;
+import vip.xiaonuo.a.param.DemoParam;
 
 /**
  * @ClassName DemoApiProvider
@@ -11,7 +14,9 @@ import vip.xiaonuo.a.api.DemoApi;
  */
 public class DemoApiProvider implements DemoApi {
     @Override
-    public String query() {
-        return "Success Provider";
+    public DemoDTO query(DemoParam demoParam) {
+        DemoDTO dto = new DemoDTO();
+        dto.setName(demoParam.getName());
+        return dto;
     }
 }

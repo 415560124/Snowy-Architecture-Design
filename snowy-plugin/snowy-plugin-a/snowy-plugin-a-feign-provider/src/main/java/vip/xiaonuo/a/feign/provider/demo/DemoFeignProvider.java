@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vip.xiaonuo.a.api.DemoApi;
+import vip.xiaonuo.a.entity.dto.DemoDTO;
 import vip.xiaonuo.a.feign.DemoFeign;
+import vip.xiaonuo.a.param.DemoParam;
 
 /**
  * @ClassName DemoFeignProvider
@@ -23,7 +25,7 @@ public class DemoFeignProvider implements DemoFeign {
 
     @RequestMapping("/feign/demo/query")
     @Override
-    public String query() {
-        return demoApi.query();
+    public DemoDTO query(DemoParam demoParam) {
+        return demoApi.query(demoParam);
     }
 }
